@@ -1,6 +1,8 @@
 %% Thrust
 % 
-% INSERT DOC
+% Thrust force is considered an important performance parameter for any
+% turbojet engine.
+%
 %% CODE
 function [output] = thrust(air_massflow, air2fuel, exhaust_velocity,...
     flight_velocity, atmospheric_pressure, exhaust_pressure, exhaust_area)
