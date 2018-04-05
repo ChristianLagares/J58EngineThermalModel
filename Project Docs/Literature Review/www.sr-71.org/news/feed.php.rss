@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:admin="http://webns.net/mvcb/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+	<channel>
+		<title>SR-71 Online: An Online Aircraft Museum</title>
+		<link>http://www.sr-71.org</link>
+		<description>RSS feed of updates at www.sr-71.org</description>
+		<language>en-US</language>
+		<ttl>1440</ttl>
+		<item>
+			<title>Joint Service Open House Airshow 2010</title>
+			<link>http://www.sr-71.org/airshows/jsoh-2010/</link>
+			<description>Added 203 new photos from the 2010 Joint Service Open House Airshow.</description>
+			<pubDate>Sun, 10 Oct 2010 22:57:00 EDT</pubDate>
+			<guid isPermaLink="false">20101010225700</guid>
+		</item>
+		<item>
+			<title>March Field Air Museum</title>
+			<link>http://www.sr-71.org/museums/march/</link>
+			<description>Added 125 new photos from the March Field Museum.</description>
+			<pubDate>Sun, 10 Oct 2010 22:50:00 EDT</pubDate>
+			<guid isPermaLink="false">20101010225000</guid>
+		</item>
+		<item>
+			<title>SR-71A #61-7975</title>
+			<link>http://www.sr-71.org/photogallery/blackbird/17975/</link>
+			<description>Added 5 new photos from 2009 visit to March Field Museum.</description>
+			<pubDate>Sun, 10 Oct 2010 16:04:00 EDT</pubDate>
+			<guid isPermaLink="false">20101010160400</guid>
+		</item>
+		<item>
+			<title>YF-12A #60-6935</title>
+			<link>http://www.sr-71.org/photogallery/blackbird/06935/</link>
+			<description>Added 10 photos courtesy of the Jim Goodall Collection.</description>
+			<pubDate>Wed, 28 Feb 2007 23:30:00 EDT</pubDate>
+			<guid isPermaLink="false">20070228233000</guid>
+		</item>
+		<item>
+			<title>YF-12A Flight Manual</title>
+			<link>http://www.sr-71.org/blackbird/yf-12a-1/</link>
+			<description>Posted the YF-12A Utility Flight Manual.</description>
+			<pubDate>Thu, 1 Feb 2007 00:00:00 EDT</pubDate>
+			<guid isPermaLink="false">20070201000000</guid>
+		</item>
+		<item>
+			<title>View From On High: Strategic Reconnaissance in the Cold War Update</title>
+			<link>http://www.sr-71.org/news/</link>
+			<description>The Air Zoo in Kalamazoo, MI has announced some changes to their upcoming SR-71 Symposium on October 6th and 7th, 2006.</description>
+			<pubDate>Thu, 17 Aug 2006 00:00:00 EDT</pubDate>
+			<guid isPermaLink="false">20060817000000</guid>
+		</item>
+		<item>
+			<title>SR-71 Simulator Moves To The Frontiers of Flight Museum</title>
+			<link>http://www.sr-71.org/news/</link>
+			<description>Chris Woodul, curator of the Frontiers of Flight Museum in Dallas, TX wrote to tell us that the SR-71 Simulator has moved from NASA DFRC.</description>
+			<pubDate>Sun, 16 Jul 2006 00:00:00 EDT</pubDate>
+			<guid isPermaLink="false">20060716000000</guid>
+		</item>
+		<item>
+			<title>Hosting Upgrades</title>
+			<link>http://www.sr-71.org/news/</link>
+			<description>Moved hosting to pair Networks for hopefully much better performance and reliability.</description>
+			<pubDate>Tue, 02 May 2006 10:15:00 EDT</pubDate>
+			<guid isPermaLink="false">20060502101500</guid>
+		</item>
+		<item>
+			<title>Does anybody look at this thing?</title>
+			<link>http://www.sr-71.org/contact/</link>
+			<description>I'm just curious how many users actually use the RSS feed. Drop me a line at the contact page if you do.</description>
+			<pubDate>Fri, 28 Apr 2006 01:45:00 EST</pubDate>
+			<guid isPermaLink="false">20060428014500</guid>
+		</item>
+		<item>
+			<title>RSS Feed Moved</title>
+			<link>http://www.sr-71.org/news/</link>
+			<description>I probably should have mentioned it earlier, but the RSS feed has moved to www.sr-71.org/news/feed.xml. Please update your feed aggregator accordingly.</description>
+			<pubDate>Fri, 28 Apr 2006 01:33:00 EST</pubDate>
+			<guid isPermaLink="false">20060428013300</guid>
+		</item>
+		<item>
+			<title>Steven F. Udvar-Hazy Center</title>
+			<link>http://www.sr-71.org/museums/udvar-hazy/</link>
+			<description>Photos from opening day at the NASM Udvar-Hazy Center in Chantilly, VA have been posted.</description>
+			<pubDate>Mon, 17 Apr 2006 12:00:01 EST</pubDate>
+			<guid isPermaLink="false">20060417120001</guid>
+		</item>
+		<item>
+			<title>Blackbird Event Announcement</title>
+			<link>http://www.sr-71.org/news/</link>
+			<description>The Air Zoo in Portage, MI will be having a Reconnaissance Symposium this September. More details are available at the News page.</description>
+			<pubDate>Mon, 17 Apr 2006 12:00:00 EST</pubDate>
+			<guid isPermaLink="false">20060417120000</guid>
+		</item>
+		<item>
+			<title>Titan Missile Museum</title>
+			<link>http://www.sr-71.org/museums/titan/</link>
+			<description>20 new photos of the Titan Missile Museum near Green Valley, AZ.</description>
+			<pubDate>Sat, 11 Feb 2006 13:30:00 EST</pubDate>
+			<guid isPermaLink="false">20060211133000</guid>
+		</item>
+		<item>
+			<title>National Museum of the United States Air Force Guide</title>
+			<link>http://www.sr-71.org/museums/usaf/</link>
+			<description>Over 250 new photos of this outstanding museum are now available.</description>
+			<pubDate>Sun, 05 Feb 2006 20:50:00 EST</pubDate>
+			<guid isPermaLink="false">20060205205000</guid>
+		</item>
+		<item>
+			<title>Museums Sneak Preview</title>
+			<link>http://www.sr-71.org/museums/usaf/modern-north/</link>
+			<description>27 new photos from the AF Museum. A preview of a major project to overhaul the entire museums section.</description>
+			<pubDate>Sun, 29 Jan 2006 00:00:00 EST</pubDate>
+			<guid isPermaLink="false">20060129000000</guid>
+		</item>
+	</channel>
+</rss>

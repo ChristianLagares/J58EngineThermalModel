@@ -1,0 +1,24 @@
+/*****************************************************
+*      Cascading Style Sheet for www.sr-71.org       *
+*      Copyright 2005-2006 by Paul R. Kucher IV      *
+*      Last Modified: 2006-05-18 at 20:44 EDT        *
+*****************************************************/
+
+@import url("common.php.css");
+
+div.nav_path {
+  text-align:left;
+  padding:22px 0 7px 0;
+}
+div.body {
+  text-align:justify;
+}
+
+div.bottom_footer, div.top_nav, div.bottom_nav, div.home_float, div.sections img, div.top_notice, div.highlighting {
+  display:none;
+}
+
+div.sections div.item {
+  margin:0;
+}
+

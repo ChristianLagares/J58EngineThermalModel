@@ -1,0 +1,157 @@
+/*****************************************************
+*      Cascading Style Sheet for www.sr-71.org       *
+*      Copyright 2005-2006 by Paul R. Kucher IV      *
+*      Last Modified: 2006-05-28 at 21:56 EDT        *
+*****************************************************/
+
+body, html {
+  margin:0;
+  padding:0;
+  text-align:center;
+  font-family:Arial,helvetica,sans-serif;
+  font-size:10pt;
+  color:black;
+  background-color:white;
+}
+div {
+  margin:0;
+  padding:0;
+}
+a {
+  color:black;
+}
+a:hover {
+  color:#666666;
+}
+img {
+  border:0px;
+}
+form {
+  margin:0;
+}
+address {
+  padding:0 0 10px 0;
+  font-style:normal;
+}
+.page_title {
+  font-weight:normal;
+  margin:0;
+  padding:20px 0 0 0;
+  font-size:24pt;
+  text-align:center;
+}
+.page_subtitle {
+  font-size:12pt;
+  margin:0;
+  font-weight:bold;
+  text-align:center;
+}
+div.body p {
+  padding:0 0 10px 0;
+  margin:0;
+}
+div.body .center {
+  text-align:center;
+}
+div.body p.comment {
+  text-align:center;
+  padding:0;
+}
+div.body h2 {
+  font-size:10pt;
+  margin:0;
+  padding:0;
+}
+div.body h3 {
+  font-size:10pt;
+  font-weight:normal;
+}
+div.body h2.section {
+  border: 0px solid black;
+  border-bottom-width:1px;
+  margin:0px auto 15px auto;
+}
+div.body h2.center {
+  text-align:center;
+  padding:10px 0 10px 0;
+}
+div.body div.news_item {
+  border-bottom:1px dotted #BBBBBB;
+  margin:10px 0 0 0;
+  padding:0;
+}
+div.body p.image_contribute {
+  text-align:center;
+  margin:10px 0 0 0;
+}
+div.body p.image_gallery_top {
+  padding:15px 0 15px 0;
+  font-size:8pt;
+  text-align:center;
+}
+div.body p.image_page_nav { /* Deprecated */
+  text-align:center;
+}
+table.thumbnails {
+  margin:0 auto 0 auto;
+}
+table.thumbnails td {
+  padding:3px 4px 3px 4px;
+  vertical-align:top;
+  text-align:center;
+  font-weight:bold;
+  font-size:11px;
+}
+table.thumbnails img {
+  border:2px solid black;
+}
+table.photos {
+  margin:0 auto 0 auto;
+  text-align:center;
+}
+table.photos td {
+  padding:5px;
+}
+table.photos a {
+  text-decoration:none;
+}
+table.photos img {
+  border: black solid 1px;
+}
+
+/** Blackbird Trivia  **/
+div.body h2.score {
+  text-align:center;
+  font-size:14pt;
+  font-weight:normal;
+  margin:10px auto 10px auto;
+}
+form.questions {
+  margin:0px auto 0px auto;
+  width:500px;
+  display:table;
+}
+form.questions ol {
+  text-align:justify;
+  padding:0 0 0 10px;
+}
+form.questions ol ol {
+  list-style-type:upper-alpha;
+  padding:0 0 0 40px;
+  margin:5px auto 15px auto;
+}
+form.questions ol input {
+  margin:5px 15px 5px 2px;
+  vertical-align:middle;
+}
+form.questions ol p {
+  font-weight:bold;
+}
+form.questions ol p.correct {
+  color:green;
+  margin:10px auto 10px auto;
+}
+form.questions ol p.incorrect {
+  color:red;
+  margin:10px auto 10px auto;
+}

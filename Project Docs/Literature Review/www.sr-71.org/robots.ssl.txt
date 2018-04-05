@@ -1,0 +1,15 @@
+# Robots.txt file
+# For domain: http://www.sr-71.org
+
+# Disallow these directories
+  User-agent: *
+  Crawl-delay: 100
+  Disallow: /about/
+  Disallow: /members/
+  Disallow: /contact/
+
+  User-agent: Yahoo-MMCrawler
+  Disallow: /blackbird/manual/
+
+  User-agent: Slurp
+  Crawl-delay: 1000

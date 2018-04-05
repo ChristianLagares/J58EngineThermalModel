@@ -1,0 +1,57 @@
+/*****************************************************
+*      Cascading Style Sheet for www.sr-71.org       *
+*      Copyright 2005-2006 by Paul R. Kucher IV      *
+*      Last Modified: 2006-05-24 at 21:33 EDT        *
+*****************************************************/
+
+@import url("sehl.php.css");
+
+body,html {
+  text-align:center;
+  font-family:Arial,helvetica,sans-serif;
+  font-size:10pt;
+  background-color:white;
+  margin:0;
+  padding:0;
+}
+a {
+  color:black;
+}
+a:hover {
+  color:#666666;
+}
+img {
+  border:0;
+}
+div.image_page h1 {
+  text-align:center;
+  font-size:12pt;
+  font-weight:bold;
+  margin:0;
+  padding:10px;
+}
+div.image_page p {
+  text-align:center;
+  margin:0;
+  padding:5px;
+}
+div.image_page img {
+  border: black solid 1px;
+}
+div.bottom_footer p {
+  margin:10px;
+  font-size:8pt;
+  text-align:center;
+}
+div.bottom_footer p.avitop {
+  margin:0 auto 10px auto;
+}
+a.members_bar {
+  color: #555555;
+  text-decoration:none;
+}
+a.members_bar:hover {
+  color:black;
+  text-decoration:underline;
+}
+

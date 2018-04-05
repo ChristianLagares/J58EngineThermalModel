@@ -1,0 +1,79 @@
+/*****************************************************
+*      Cascading Style Sheet for www.sr-71.org       *
+*      Copyright 2005-2006 by Paul R. Kucher IV      *
+*      Last Modified: 2006-05-24 at 21:31 EDT        *
+*****************************************************/
+
+div.shell {
+  margin:10px auto 0 auto;
+  width:642px;
+}
+div.top {
+  height:12px;
+  background:url("../design/top.png") no-repeat;
+  width:100%;
+}
+div.center {
+  background:url("../design/center.png") repeat-y;
+  width:100%;
+}
+div.bottom {
+  height:12px;
+  background:url("../design/bottom.png") no-repeat;
+  width:100%;
+}
+div.body {
+  margin:0 auto 0 auto;
+  background:url("../design/inside_center.png") repeat-y;
+  text-align:justify;
+  width:599px;
+  padding:0 9px 0 9px;
+}
+div.inside_bottom {
+  height:9px;
+  margin:0 auto 0 auto;
+  background:url("../design/inside_bottom.png") no-repeat;
+  width:617px;
+}
+div.home_main {
+  width:365px;
+}
+div.home_float {
+  margin:0;
+  padding:0;
+  float:right;
+  width:225px;
+}
+div.box_top {
+  height:9px;
+  background:url("../design/box_top.png") no-repeat bottom;
+  width:225px;
+}
+div.box_center {
+  text-align:center;
+  background:url("../design/box_center.png") repeat-y;
+  width:225px;
+}
+div.box_bottom {
+  height:9px;
+  margin:0 auto 8px auto;
+  background:url("../design/box_bottom.png") no-repeat top;
+  width:225px;
+}
+
+div.top_nav {  /* Unnecessary? */
+  margin:0;
+  padding:0;
+}
+div.top_nav img {
+  vertical-align:bottom;
+}
+div.bottom_nav {
+  margin:9px auto 0 auto;
+  padding:0;
+  text-align:center;
+}
+div.bottom_nav img {
+  vertical-align:bottom;
+}
+
