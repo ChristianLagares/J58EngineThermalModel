@@ -1,6 +1,17 @@
 %% Engine Specs
 %
-% mf
+% Basic engine parameters are provided in a structure.
+%
+% engine_specs:
+% 
+%     * WET_THRUST
+%     * DRY_THRUST
+%     * SFC
+%     * AFTERBURNER_FUEL_perHour
+%     * NO_AFTERBURNER_FUEL_perHour
+%     * AFTERBURNER_FUEL_perSecond
+%     * NO_AFTERBURNER_FUEL_perSecond
+
 
 %% CODE
 function [engine_specs] = engine()
