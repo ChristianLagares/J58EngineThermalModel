@@ -4,7 +4,8 @@
 %% Code
 function [P2, T2] = atm2comp(altitude, T_offset, Mach)
     % Docstring
-    properties = atmos(altitude, 'units', 'SI',...
+    meters = 0.3.*altitude;
+    properties = atmos(meters, 'units', 'SI',...
         'structOutput', true);
     P0 = properties.P;
     recovery_rate = recovery(Mach);
