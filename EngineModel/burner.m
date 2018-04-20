@@ -2,7 +2,7 @@
 %
 % INSERT DOC
 %% CODE
-function [P04, T04, fuel2air, mdot_a, mdot_e, mdot_f] = burner(P03, T03, mdot_a)
+function [P04, T04, fuel2air, mdot_a, mdot_e, mdot_f, JP7LHV] = burner(P03, T03, mdot_a)
     % Docstring
     Cph = 1.005; % [kJ/kg ºK]
     Cpc = 1.155; % [kJ/kg ºK]
