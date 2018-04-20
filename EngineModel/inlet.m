@@ -2,7 +2,7 @@
 %
 % INSERT DOC
 %% CODE
-function [P_a, P_0a, P2, T_a, T2, mdot_a] = inlet(altitude, Mach, Toffset)
+function [P_a, P_0a, P2, T_a, T2, mdot_a, V_inf] = inlet(altitude, Mach, Toffset)
     % inlet - models the SR-71 supersonic inlet
     eta_d = recovery(Mach);
     gamma_c = 1.4; 
@@ -17,6 +17,7 @@ function [P_a, P_0a, P2, T_a, T2, mdot_a] = inlet(altitude, Mach, Toffset)
     
     P_a  = atmosphere.P;
     T_a  = atmosphere.T +Toffset;
+    V_inf = atmosphere.a .* Mach;
     
     P_0a = P_a + 0.5 .* atmosphere.rho .* (Mach .* atmosphere.a).^2;
     

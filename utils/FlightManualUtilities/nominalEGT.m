@@ -3,12 +3,10 @@
 %
 %% CODE
 function egt = nominalEGT(CompressorInletTemperature)
-    assert(CompressorInletTemperature > -50, 'Off Limits');
-    if CompressorInletTemperature <= 10
-        egt = 570 + ((810 - 570)/(10-(-50)))*(CompressorInletTemperature+50);
-    elseif CompressorInletTemperature > 10 && CompressorInletTemperature < 50
-        egt = 820 + ((780-810)/(50-10))*(CompressorInletTemperature - 10);
-    elseif CompressorInletTemperature >= 50
-        egt = 795;
-    end
+    assert(all(CompressorInletTemperature) > -50, 'Off Limits');
+    egt = zeros(size(CompressorInletTemperature));
+
+    egt(CompressorInletTemperature <= 10) = 570 + ((810 - 570)/(10-(-50)))*(CompressorInletTemperature(CompressorInletTemperature <= 10)+50);
+    egt(CompressorInletTemperature > 10 & CompressorInletTemperature < 50) = 820 + ((780-810)/(50-10))*(CompressorInletTemperature(CompressorInletTemperature > 10 & CompressorInletTemperature < 50) - 10);
+    egt(CompressorInletTemperature >= 50) = 795;
 end
