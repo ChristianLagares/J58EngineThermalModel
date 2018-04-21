@@ -3,7 +3,7 @@
 %
 %% Code
 
-function [altitude, Mach, Afterburner] = condition_vectorizer(num_conditions)
+function [altitude, Mach, Afterburner] = condition_vectorizer()
     % Docstring
     FlightConditions = flight_conditions();
     

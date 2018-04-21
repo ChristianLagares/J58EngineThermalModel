@@ -15,7 +15,7 @@
 
 %% CODE
 function [engine_specs] = engine()
-% DOCSTRING
+    % Published Specs
     WET_THRUST = 34000; % lbf
     DRY_THRUST = 25000; % lbf
     WET_SFC = 1.9; % lb/lbf*hr

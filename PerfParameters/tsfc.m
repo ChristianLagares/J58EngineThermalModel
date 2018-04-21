@@ -3,7 +3,7 @@
 % INSERT DOC
 %% CODE
 function [output] = tsfc(air_massflow,air2fuel,thrust)
-% Docstring
+    % Docstring
 
-output = air_massflow.*air2fuel./thrust
+    output = air_massflow.*air2fuel./thrust;
 end

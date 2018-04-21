@@ -56,9 +56,12 @@ nozzle_area = (mdot_a_nonbleed.SI + mdot_f.SI + mdot_f2.SI)./(rho_nozzle + V8); 
 thrust_ENGLISH = 0.224808943.* thrust_SI; % lbf
 
 % Propulsive Efficiency
-prop_efficiency = (V_inf.*thrust_SI)./((V_inf.*thrust_SI) + 0.5.*total_mdot.SI.*((V8 - V_inf).^2));
+[prop_efficiency] = propulsive_efficiency(mdot_a_nonbleed.SI,...
+                                          total_fuel2air.SI,...
+                                          V8, V_inf, thrust_SI);
 
 % Thermal Efficiency
+
 thermal_efficiency = ((thrust_SI.*V8) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*((V8-V_inf).^2)))./((LHV.*1000).*(mdot_f2.SI+mdot_f.SI));
 
 % Overall Efficiency
