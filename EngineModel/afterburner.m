@@ -17,15 +17,19 @@ function [P06, T06, mdot_e2, mdot_f2, fuel2air] = afterburner(P05, T05, AB, mdot
     P06(AB == 1) = P05(AB == 1).*(1-(1-eta_b));
     
     tmp1 = zeros(size(T05));
-    tmp1(AB == 1) = mdot_e1.SI(AB == 1).*(1+fuel2air(AB == 1));
+    tmp1(AB == 1) = mdot_e1.ENGLISH(AB == 1).*(1+fuel2air(AB == 1));
+    tmp1(AB == 0) = mdot_e1.ENGLISH(AB == 0);
     tmp2 = zeros(size(T05));
     tmp2(AB == 1) = mdot_e1.SI(AB == 1).*(1+fuel2air(AB == 1));
+    tmp2(AB == 0) = mdot_e1.SI(AB == 0);
     mdot_e2 = struct('ENGLISH', tmp1,...
                     'SI', tmp2);
     tmp1 = zeros(size(T05));
     tmp1(AB == 1) = mdot_e1.ENGLISH(AB == 1).*(fuel2air(AB == 1));
+    tmp1(AB == 0) = 0;
     tmp2 = zeros(size(T05));
     tmp2(AB == 1) = mdot_e1.SI(AB == 1).*(fuel2air(AB == 1));
+    tmp2(AB == 0) = 0;
     mdot_f2 = struct('ENGLISH', tmp1,...
                     'SI', tmp2);
 end

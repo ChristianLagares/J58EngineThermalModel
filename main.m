@@ -67,6 +67,15 @@ thermal_efficiency = ((thrust_SI.*V8) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*
 % Overall Efficiency
 overall_efficiency = prop_efficiency .* thermal_efficiency;
 
+% TSFC
+TSFC = tsfc(mdot_a.SI, total_fuel2air.SI.*3600, thrust_SI);
+
+% Impulse
+Impulse = impulse(mdot_a.SI, total_fuel2air.SI, thrust_SI);
+
+% Specific Thrust
+specific_thrust = (thrust_SI)./(mdot_a_nonbleed.SI);
+
 %% Viz
 % 
 figure('Name','PressureVStation')
@@ -76,6 +85,8 @@ ylabel('P [Pa]')
 legend('Validation','Takeoff', 'Refueling_Buddy', 'Climbing', 'Concorde',...
        'YF12A', 'A12Max', 'Takeoff_High', 'LowestM1',...
        'MA139XAA', 'FrenchGriffon2', 'ConstantClimb', 'Out_Of_Model')
+grid on
+grid minor
 
 figure('Name','TemperatureVStation')
 plot([T_a; T_a; T02; T03; T04; T05; T06; T8])
@@ -84,18 +95,75 @@ ylabel('T [ºK]')
 legend('Validation','Takeoff', 'Refueling_Buddy', 'Climbing', 'Concorde',...
        'YF12A', 'A12Max', 'Takeoff_High', 'LowestM1',...
        'MA139XAA', 'FrenchGriffon2', 'ConstantClimb', 'Out_Of_Model')
+grid on
+grid minor
 
 figure('Name','ThermalEfficiencyVV_inf')
 scatter(V_inf', thermal_efficiency')
-xlabel('V_inf [m/s]')
+xlabel('V_{inf} [m/s]')
 ylabel('\eta_t')
+grid on
+grid minor
 
-figure('Name','PropulsiveEfficiencyVV_inf')
+figure('Name','ThermalEfficiencyVMach')
+scatter(Mach', thermal_efficiency')
+xlabel('Mach')
+ylabel('\eta_t')
+grid on
+grid minor
+
+figure('Name','PropulsiveEfficiencyVVinf')
 scatter(V_inf', prop_efficiency')
-xlabel('V_inf [m/s]')
+xlabel('V_{inf} [m/s]')
 ylabel('\eta_p')
+grid on
+grid minor
+
+figure('Name','PropulsiveEfficiencyVMach')
+scatter(Mach', prop_efficiency')
+xlabel('Mach')
+ylabel('\eta_p')
+grid on
+grid minor
 
 figure('Name','OverallEfficiencyVV_inf')
 scatter(V_inf', overall_efficiency')
-xlabel('V_inf [m/s]')
+xlabel('V_{inf} [m/s]')
 ylabel('\eta_o')
+grid on
+grid minor
+
+figure('Name','OverallEfficiencyVMach')
+scatter(Mach', overall_efficiency')
+xlabel('Mach')
+ylabel('\eta_o')
+grid on
+grid minor
+
+figure('Name','TSFCVMach')
+scatter(Mach, TSFC)
+xlabel('Mach')
+ylabel('TSFC [(kg/h)/N]')
+grid on
+grid minor
+
+figure('Name','SpecificThrustVMach')
+scatter(Mach, specific_thrust)
+xlabel('Mach')
+ylabel('Specific Thrust [N/(kg/s)]')
+grid on
+grid minor
+
+figure('Name','fVMach')
+scatter(Mach, total_fuel2air.SI)
+xlabel('Mach')
+ylabel('Fuel to Air Ratio')
+grid on
+grid minor
+
+figure('Name','ImpulseVMach')
+scatter(Mach, Impulse)
+xlabel('Mach')
+ylabel('Specific Impulse')
+grid on
+grid minor
