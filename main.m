@@ -37,11 +37,6 @@ total_fuel2air = struct('ENGLISH', (mdot_f2.ENGLISH+mdot_f.ENGLISH)./mdot_a.ENGL
 % Nozzle Model
 [P8, T8, V8] = nozzle(P06, T06, AB, T02, P_a);
 
-fprintf('V_inf\tV_ext\tMach\tProportion\n')
-for ii = [1:12]
-    fprintf('%3.2f\t%3.2f\t%3.2f\t%3.2f\n',V_inf(ii), V8(ii), Mach(ii), V8(ii)/V_inf(ii))
-end
-
 %% Postprocessing
 %
 % Nozzle Area
@@ -62,7 +57,7 @@ thrust_ENGLISH = 0.224808943.* thrust_SI; % lbf
 
 % Thermal Efficiency
 
-thermal_efficiency = ((thrust_SI.*V8) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*((V8-V_inf).^2)))./((LHV.*1000).*(mdot_f2.SI+mdot_f.SI));
+thermal_efficiency = ((thrust_SI.*V_inf) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*((V8-V_inf).^2)))./((LHV.*1000).*(mdot_f2.SI+mdot_f.SI));
 
 % Overall Efficiency
 overall_efficiency = prop_efficiency .* thermal_efficiency;
@@ -70,100 +65,217 @@ overall_efficiency = prop_efficiency .* thermal_efficiency;
 % TSFC
 TSFC = tsfc(mdot_a.SI, total_fuel2air.SI.*3600, thrust_SI);
 
+% TSFC ENGLISH
+TSFC_ENGLISH = tsfc(mdot_a.ENGLISH, total_fuel2air.ENGLISH.*3600, thrust_ENGLISH);
+
 % Impulse
-Impulse = impulse(mdot_a.SI, total_fuel2air.SI, thrust_SI);
+Impulse = impulse(mdot_a_nonbleed.SI, total_fuel2air.SI, thrust_SI);
 
 % Specific Thrust
 specific_thrust = (thrust_SI)./(mdot_a_nonbleed.SI);
 
+fprintf('V_inf [mph]\tV_ext[mph]\tMach\tEta_T\tEta_P\tEta_o\tThrust [lbf]\tThrust [kN]\tTSFC [kg/h/N]\n')
+for ii = [1:13]
+    fprintf('%3.2f\t\t%3.2f\t\t%3.2f\t%4.4f\t%4.4f\t%4.4f\t%6.1f\t\t%3.2f\t\t%4.4f\n',V_inf(ii)*2.24, V8(ii)*2.24, Mach(ii), thermal_efficiency(ii), prop_efficiency(ii), overall_efficiency(ii), thrust_ENGLISH(ii), thrust_SI(ii)/1000, TSFC(ii))
+end
+
 %% Viz
 % 
-figure('Name','PressureVStation')
-plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
-xlabel('Station')
-ylabel('P [Pa]')
-legend('Validation','Takeoff', 'Refueling_Buddy', 'Climbing', 'Concorde',...
-       'YF12A', 'A12Max', 'Takeoff_High', 'LowestM1',...
-       'MA139XAA', 'FrenchGriffon2', 'ConstantClimb', 'Out_Of_Model')
-grid on
-grid minor
+render = true;
+if render == true
+    figure('Name','PressureVStation')
+    plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
+    xlabel('Station')
+    ylabel('P [Pa]')
+    legend('Validation','Takeoff (1)', 'Refueling Buddy (2)',...
+           'Climbing (3)', 'Concorde (4)',...
+           'YF12A (5)', 'A12Max (6)', 'Takeoff High (7)', 'LowestM1  (8)',...
+           'MA139XAA (9)', 'FrenchGriffon2  (10)', 'ConstantClimb (11)', 'Out Of Model  (12)')
+    grid on
+    grid minor
 
-figure('Name','TemperatureVStation')
-plot([T_a; T_a; T02; T03; T04; T05; T06; T8])
-xlabel('Station')
-ylabel('T [ºK]')
-legend('Validation','Takeoff', 'Refueling_Buddy', 'Climbing', 'Concorde',...
-       'YF12A', 'A12Max', 'Takeoff_High', 'LowestM1',...
-       'MA139XAA', 'FrenchGriffon2', 'ConstantClimb', 'Out_Of_Model')
-grid on
-grid minor
+    figure('Name','TemperatureVStation')
+    plot([T_a; T_a; T02; T03; T04; T05; T06; T8])
+    xlabel('Station')
+    ylabel('T [ºK]')
+    legend('Validation','Takeoff (1)', 'Refueling Buddy (2)',...
+           'Climbing (3)', 'Concorde (4)',...
+           'YF12A (5)', 'A12Max (6)', 'Takeoff High (7)', 'LowestM1  (8)',...
+           'MA139XAA (9)', 'FrenchGriffon2  (10)', 'ConstantClimb (11)', 'Out Of Model  (12)')
+    grid on
+    grid minor
 
-figure('Name','ThermalEfficiencyVV_inf')
-scatter(V_inf', thermal_efficiency')
-xlabel('V_{inf} [m/s]')
-ylabel('\eta_t')
-grid on
-grid minor
+    figure('Name','ThermalEfficiencyVV_inf')
+    scatter(V_inf', thermal_efficiency')
+    ylim([0,1])
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_t')
+    grid on
+    grid minor
 
-figure('Name','ThermalEfficiencyVMach')
-scatter(Mach', thermal_efficiency')
-xlabel('Mach')
-ylabel('\eta_t')
-grid on
-grid minor
+    figure('Name','ThermalEfficiencyVMach')
+    scatter(Mach', thermal_efficiency')
+    ylim([0,1])
+    xlabel('Mach')
+    ylabel('\eta_t')
+    grid on
+    grid minor
 
-figure('Name','PropulsiveEfficiencyVVinf')
-scatter(V_inf', prop_efficiency')
-xlabel('V_{inf} [m/s]')
-ylabel('\eta_p')
-grid on
-grid minor
+    figure('Name','PropulsiveEfficiencyVVinf')
+    scatter(V_inf', prop_efficiency')
+    ylim([0,1])
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_p')
+    grid on
+    grid minor
 
-figure('Name','PropulsiveEfficiencyVMach')
-scatter(Mach', prop_efficiency')
-xlabel('Mach')
-ylabel('\eta_p')
-grid on
-grid minor
+    figure('Name','PropulsiveEfficiencyVMach')
+    scatter(Mach', prop_efficiency')
+    ylim([0,1])
+    xlabel('Mach')
+    ylabel('\eta_p')
+    grid on
+    grid minor
 
-figure('Name','OverallEfficiencyVV_inf')
-scatter(V_inf', overall_efficiency')
-xlabel('V_{inf} [m/s]')
-ylabel('\eta_o')
-grid on
-grid minor
+    figure('Name','OverallEfficiencyVV_inf')
+    scatter(V_inf', overall_efficiency')
+    ylim([0,1])
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_o')
+    grid on
+    grid minor
 
-figure('Name','OverallEfficiencyVMach')
-scatter(Mach', overall_efficiency')
-xlabel('Mach')
-ylabel('\eta_o')
-grid on
-grid minor
+    figure('Name','OverallEfficiencyVMach')
+    scatter(Mach', overall_efficiency')
+    ylim([0,1])
+    xlabel('Mach')
+    ylabel('\eta_o')
+    grid on
+    grid minor
 
-figure('Name','TSFCVMach')
-scatter(Mach, TSFC)
-xlabel('Mach')
-ylabel('TSFC [(kg/h)/N]')
-grid on
-grid minor
+    figure('Name','TSFCVMach')
+    scatter(Mach, TSFC)
+    xlabel('Mach')
+    ylabel('TSFC [(kg/h)/N]')
+    grid on
+    grid minor
 
-figure('Name','SpecificThrustVMach')
-scatter(Mach, specific_thrust)
-xlabel('Mach')
-ylabel('Specific Thrust [N/(kg/s)]')
-grid on
-grid minor
+    figure('Name','SpecificThrustVMach')
+    scatter(Mach, specific_thrust)
+    xlabel('Mach')
+    ylabel('Specific Thrust [N/(kg/s)]')
+    grid on
+    grid minor
 
-figure('Name','fVMach')
-scatter(Mach, total_fuel2air.SI)
-xlabel('Mach')
-ylabel('Fuel to Air Ratio')
-grid on
-grid minor
+    figure('Name','fVMach')
+    scatter(Mach, total_fuel2air.SI)
+    xlabel('Mach')
+    ylabel('Fuel to Air Ratio')
+    grid on
+    grid minor
 
-figure('Name','ImpulseVMach')
-scatter(Mach, Impulse)
-xlabel('Mach')
-ylabel('Specific Impulse')
-grid on
+    figure('Name','ImpulseVMach')
+    scatter(Mach, Impulse)
+    xlabel('Mach')
+    ylabel('Impulse [s]')
+    grid on
+    grid minor
+    
+    figure('Name','EffVThrust')
+    scatter(thrust_ENGLISH, overall_efficiency)
+    xlabel('\tau [lbf]')
+    ylabel('\eta_o')
+    grid on
+    grid minor
+end
+
+%% Correlation
+FULL_MATRIX = [T_a',...
+               P_a',...
+               thermal_efficiency',...
+               prop_efficiency',...
+               overall_efficiency',...
+               thrust_ENGLISH',...
+               TSFC',...
+               fuel2air',...
+               altitude',...
+               specific_thrust',...
+               mdot_a_nonbleed.SI',...
+               Mach'];
+
+FULL_MATRIX_NORM = [normalize_array(thermal_efficiency'),...
+                    normalize_array(prop_efficiency'),...
+                    normalize_array(overall_efficiency'),...
+                    normalize_array(thrust_ENGLISH'),...
+                    normalize_array(1./TSFC'),...
+                    normalize_array(1./fuel2air'),...
+                    normalize_array(altitude'),...
+                    normalize_array(specific_thrust'),...
+                    normalize_array(mdot_a_nonbleed.SI'),...
+                    normalize_array(Mach')];
+variable_table = array2table(FULL_MATRIX, 'VariableNames',...
+                              {'Ta','Pa','thermalEff','propEff','overallEff',...
+                              'thrustEnglish',...
+                              'TSFC', 'fuel2air', 'altitude','specificThrust',...
+                              'mdotA','Mach'})
+%% Decision Matrix
+rounds = 2;
+permutations_considered = 12;
+total_variables = 10;
+total_conditions = 13;
+overall_probability = zeros(total_conditions,1);
+for round = [1:rounds]
+    decision_weight = zeros(total_variables, permutations_considered);
+    for ii = [1:permutations_considered]
+        if permutations_considered > 10
+            if ii == 1
+                random_sample = [10;9;8;7;6;5;4;3;2;1];
+            elseif ii == 2
+                random_sample = [9;8;7;6;5;4;3;2;1;10];
+            elseif ii == 3
+                random_sample = [8;7;6;5;4;3;2;1;10;9];
+            elseif ii == 4
+                random_sample = [7;6;5;4;3;2;1;10;9;8];
+            elseif ii == 5
+                random_sample = [6;5;4;3;2;1;10;9;8;7];
+            elseif ii == 6
+                random_sample = [5;4;3;2;1;10;9;8;7;6];
+            elseif ii == 7
+                random_sample = [4;3;2;1;10;9;8;7;6;5];
+            elseif ii == 8
+                random_sample = [3;2;1;10;9;8;7;6;5;4];
+            elseif ii == 9
+                random_sample = [2;1;10;9;8;7;6;5;4;3];
+            elseif ii == 10
+                random_sample = [1;10;9;8;7;6;5;4;3;2];
+            elseif ii > 10
+                random_sample = rand(total_variables,1);
+            end
+        else
+            random_sample = rand(total_variables,1);
+        end
+        decision_weight(:,ii) = exp(random_sample)./sum(exp(random_sample));
+    end
+    decision_matrix = FULL_MATRIX_NORM * decision_weight;
+    probability_array = zeros(total_conditions,1);
+    for iii = [1:total_conditions]
+        logits = decision_matrix(iii,:);
+        probability_array(iii, 1) = sum(logits);
+    end
+    probability_array = exp(probability_array)./sum(exp(probability_array));
+    overall_probability(:) = overall_probability(:) + probability_array(:);
+end
+overall_probability = exp(overall_probability)./sum(exp(overall_probability));
+figure('NAME','PROBABILITY')
+plot(overall_probability, 'ko')
+ylabel('Probability')
+xlabel('Condition')
+ylim([0,1])
+grid on 
 grid minor
+correlate = false;
+if correlate == true
+    corrplot(variable_table, 'type', 'Pearson', 'testR', 'on')
+    corrplot(variable_table, 'type', 'Kendall', 'testR', 'on')
+    corrplot(variable_table, 'type', 'Spearman', 'testR', 'on')
+end

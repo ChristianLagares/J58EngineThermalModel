@@ -1,0 +1,466 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Main Routine</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-05-07"><meta name="DC.source" content="main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Main Routine</h1><!--introduction--><p>This file contains the main routine for the J58 Thermal Model.</p><p>All other files are required to be in the same directory.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Routine Body</a></li><li><a href="#2">Postprocessing</a></li><li><a href="#3">Viz</a></li><li><a href="#4">Correlation</a></li></ul></div><h2>Routine Body<a name="1"></a></h2><p>Pressures [Pa] Temperatures [&ordm;K] mdot_a.ENGLISH [lb/s] mdot_a.SI [kg/s]</p><pre class="codeinput"><span class="comment">% Generating Condition Vectors</span>
+[altitude, Mach, AB] = condition_vectorizer();
+
+<span class="comment">% Inlet Model</span>
+[P_a, P0A, P02, T_a, T02, mdot_a_nonbleed, V_inf] = inlet(altitude, Mach, 0);
+
+<span class="comment">% Shock Trap Bleed Model</span>
+[P02, T02, mdot_a] = shock_trap(P02, T02, mdot_a_nonbleed, Mach);
+
+<span class="comment">% Compressor Model</span>
+[P03, T03, mdot_a, eta_c] = compressor(P02, T02, mdot_a);
+
+<span class="comment">% Burner Model</span>
+[P04, T04, fuel2air, mdot_a, mdot_e1, mdot_f, LHV] = burner(P03, T03, mdot_a);
+
+<span class="comment">% Turbine Model</span>
+[P05, T05] = turbine(T02, T03, P04, T04, fuel2air);
+
+<span class="comment">% Afterburner Model</span>
+[P06, T06, mdot_e2, mdot_f2, ab_fuel2air] = afterburner(P05, T05, AB, mdot_e1);
+total_fuel2air = struct(<span class="string">'ENGLISH'</span>, (mdot_f2.ENGLISH+mdot_f.ENGLISH)./mdot_a.ENGLISH,<span class="keyword">...</span>
+                        <span class="string">'SI'</span>, (mdot_f2.SI+mdot_f.SI)./mdot_a.SI);
+<span class="comment">%total</span>
+
+<span class="comment">% Nozzle Model</span>
+[P8, T8, V8] = nozzle(P06, T06, AB, T02, P_a);
+</pre><h2>Postprocessing<a name="2"></a></h2><p>Nozzle Area</p><pre class="codeinput">rho_nozzle = P8./(287.*T8); <span class="comment">% kg/m^3</span>
+total_mdot = struct(<span class="string">'ENGLISH'</span>, (mdot_a_nonbleed.ENGLISH + mdot_f.ENGLISH + mdot_f2.ENGLISH),<span class="keyword">...</span>
+                    <span class="string">'SI'</span>, (mdot_a_nonbleed.SI + mdot_f.SI + mdot_f2.SI));
+nozzle_area = (mdot_a_nonbleed.SI + mdot_f.SI + mdot_f2.SI)./(rho_nozzle + V8); <span class="comment">% m^2</span>
+
+<span class="comment">% Thrust</span>
+[thrust_SI] = thrust(mdot_a.SI, total_fuel2air.SI, <span class="keyword">...</span>
+                     V8,V_inf, P_a, P8, nozzle_area); <span class="comment">% Newtons</span>
+thrust_ENGLISH = 0.224808943.* thrust_SI; <span class="comment">% lbf</span>
+
+<span class="comment">% Propulsive Efficiency</span>
+[prop_efficiency] = propulsive_efficiency(mdot_a_nonbleed.SI,<span class="keyword">...</span>
+                                          total_fuel2air.SI,<span class="keyword">...</span>
+                                          V8, V_inf, thrust_SI);
+
+<span class="comment">% Thermal Efficiency</span>
+
+thermal_efficiency = ((thrust_SI.*V_inf) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*((V8-V_inf).^2)))./((LHV.*1000).*(mdot_f2.SI+mdot_f.SI));
+
+<span class="comment">% Overall Efficiency</span>
+overall_efficiency = prop_efficiency .* thermal_efficiency;
+
+<span class="comment">% TSFC</span>
+TSFC = tsfc(mdot_a.SI, total_fuel2air.SI.*3600, thrust_SI);
+
+<span class="comment">% TSFC ENGLISH</span>
+TSFC_ENGLISH = tsfc(mdot_a.ENGLISH, total_fuel2air.ENGLISH.*3600, thrust_ENGLISH);
+
+<span class="comment">% Impulse</span>
+Impulse = impulse(mdot_a_nonbleed.SI, total_fuel2air.SI, thrust_SI);
+
+<span class="comment">% Specific Thrust</span>
+specific_thrust = (thrust_SI)./(mdot_a_nonbleed.SI);
+
+fprintf(<span class="string">'V_inf [mph]\tV_ext[mph]\tMach\tEta_T\tEta_P\tEta_o\tThrust [lbf]\tThrust [kN]\tTSFC [kg/h/N]\n'</span>)
+<span class="keyword">for</span> ii = [1:13]
+    fprintf(<span class="string">'%3.2f\t\t%3.2f\t\t%3.2f\t%4.4f\t%4.4f\t%4.4f\t%6.1f\t\t%3.2f\t\t%4.4f\n'</span>,V_inf(ii)*2.24, V8(ii)*2.24, Mach(ii), thermal_efficiency(ii), prop_efficiency(ii), overall_efficiency(ii), thrust_ENGLISH(ii), thrust_SI(ii)/1000, TSFC(ii))
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">V_inf [mph]	V_ext[mph]	Mach	Eta_T	Eta_P	Eta_o	Thrust [lbf]	Thrust [kN]	TSFC [kg/h/N]
+0.00		1444.47		0.00	0.1142	0.0000	0.0000	33240.9		147.86		0.2159
+269.99		1440.87		0.35	0.1309	0.4249	0.0556	40073.4		178.26		0.1786
+521.09		1394.88		0.75	0.3827	0.7484	0.2864	40754.5		181.29		0.0669
+850.62		1437.86		1.25	0.2848	0.9334	0.2659	53255.1		236.89		0.1177
+1321.91		1430.31		2.00	0.4924	0.9984	0.4916	45657.3		203.09		0.0989
+1454.10		1430.31		2.20	0.5657	0.9999	0.5657	46037.1		204.78		0.0946
+1462.97		1430.31		2.20	0.5341	0.9999	0.5341	41189.0		183.22		0.1008
+260.99		1419.95		0.35	0.1254	0.4162	0.0522	37542.9		167.00		0.1840
+722.54		1433.22		1.00	0.2411	0.8843	0.2132	53454.5		237.78		0.1247
+1255.82		1430.31		1.90	0.5613	0.9964	0.5593	60061.3		267.17		0.0826
+1388.01		1430.31		2.10	0.5352	0.9998	0.5351	46773.4		208.06		0.0954
+604.60		1377.53		0.90	0.1796	0.8197	0.1472	41613.8		185.11		0.1511
+1656.20		1430.31		2.50	0.6940	0.9949	0.6905	47057.5		209.32		0.0882
+</pre><h2>Viz<a name="3"></a></h2><pre class="codeinput">render = false;
+<span class="keyword">if</span> render
+    figure(<span class="string">'Name'</span>,<span class="string">'PressureVStation'</span>)
+    plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
+    xlabel(<span class="string">'Station'</span>)
+    ylabel(<span class="string">'P [Pa]'</span>)
+    legend(<span class="string">'Validation'</span>,<span class="string">'Takeoff (1)'</span>, <span class="string">'Refueling Buddy (2)'</span>,<span class="keyword">...</span>
+           <span class="string">'Climbing (3)'</span>, <span class="string">'Concorde (4)'</span>,<span class="keyword">...</span>
+           <span class="string">'YF12A (5)'</span>, <span class="string">'A12Max (6)'</span>, <span class="string">'Takeoff High (7)'</span>, <span class="string">'LowestM1  (8)'</span>,<span class="keyword">...</span>
+           <span class="string">'MA139XAA (9)'</span>, <span class="string">'FrenchGriffon2  (10)'</span>, <span class="string">'ConstantClimb (11)'</span>, <span class="string">'Out Of Model  (12)'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'TemperatureVStation'</span>)
+    plot([T_a; T_a; T02; T03; T04; T05; T06; T8])
+    xlabel(<span class="string">'Station'</span>)
+    ylabel(<span class="string">'T [&ordm;K]'</span>)
+    legend(<span class="string">'Validation'</span>,<span class="string">'Takeoff (1)'</span>, <span class="string">'Refueling Buddy (2)'</span>,<span class="keyword">...</span>
+           <span class="string">'Climbing (3)'</span>, <span class="string">'Concorde (4)'</span>,<span class="keyword">...</span>
+           <span class="string">'YF12A (5)'</span>, <span class="string">'A12Max (6)'</span>, <span class="string">'Takeoff High (7)'</span>, <span class="string">'LowestM1  (8)'</span>,<span class="keyword">...</span>
+           <span class="string">'MA139XAA (9)'</span>, <span class="string">'FrenchGriffon2  (10)'</span>, <span class="string">'ConstantClimb (11)'</span>, <span class="string">'Out Of Model  (12)'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'ThermalEfficiencyVV_inf'</span>)
+    scatter(V_inf', thermal_efficiency')
+    xlabel(<span class="string">'V_{inf} [m/s]'</span>)
+    ylabel(<span class="string">'\eta_t'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'ThermalEfficiencyVMach'</span>)
+    scatter(Mach', thermal_efficiency')
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'\eta_t'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'PropulsiveEfficiencyVVinf'</span>)
+    scatter(V_inf', prop_efficiency')
+    xlabel(<span class="string">'V_{inf} [m/s]'</span>)
+    ylabel(<span class="string">'\eta_p'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'PropulsiveEfficiencyVMach'</span>)
+    scatter(Mach', prop_efficiency')
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'\eta_p'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'OverallEfficiencyVV_inf'</span>)
+    scatter(V_inf', overall_efficiency')
+    xlabel(<span class="string">'V_{inf} [m/s]'</span>)
+    ylabel(<span class="string">'\eta_o'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'OverallEfficiencyVMach'</span>)
+    scatter(Mach', overall_efficiency')
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'\eta_o'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'TSFCVMach'</span>)
+    scatter(Mach, TSFC)
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'TSFC [(kg/h)/N]'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'SpecificThrustVMach'</span>)
+    scatter(Mach, specific_thrust)
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'Specific Thrust [N/(kg/s)]'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'fVMach'</span>)
+    scatter(Mach, total_fuel2air.SI)
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'Fuel to Air Ratio'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+
+    figure(<span class="string">'Name'</span>,<span class="string">'ImpulseVMach'</span>)
+    scatter(Mach, Impulse)
+    xlabel(<span class="string">'Mach'</span>)
+    ylabel(<span class="string">'Impulse'</span>)
+    grid <span class="string">on</span>
+    grid <span class="string">minor</span>
+<span class="keyword">end</span>
+</pre><h2>Correlation<a name="4"></a></h2><pre class="codeinput">variable_table = array2table([T_a',<span class="keyword">...</span>
+                              P_a',<span class="keyword">...</span>
+                              thermal_efficiency',<span class="keyword">...</span>
+                              prop_efficiency',<span class="keyword">...</span>
+                              overall_efficiency',<span class="keyword">...</span>
+                              nozzle_area',<span class="keyword">...</span>
+                              rho_nozzle',<span class="keyword">...</span>
+                              thrust_ENGLISH',<span class="keyword">...</span>
+                              TSFC',<span class="keyword">...</span>
+                              fuel2air',<span class="keyword">...</span>
+                              altitude',<span class="keyword">...</span>
+                              specific_thrust',<span class="keyword">...</span>
+                              mdot_a_nonbleed.SI',<span class="keyword">...</span>
+                              Mach',<span class="keyword">...</span>
+                              mdot_f2.SI'], <span class="string">'VariableNames'</span>,<span class="keyword">...</span>
+                              {<span class="string">'Ta'</span>,<span class="string">'Pa'</span>,<span class="string">'thermalEff'</span>,<span class="string">'propEff'</span>,<span class="string">'overallEff'</span>,<span class="keyword">...</span>
+                              <span class="string">'nozzleaArea'</span>, <span class="string">'rhoNozzle'</span>, <span class="string">'thrustEnglish'</span>,<span class="keyword">...</span>
+                              <span class="string">'TSFC'</span>, <span class="string">'fuel2air'</span>, <span class="string">'altitude'</span>,<span class="string">'specificThrust'</span>,<span class="keyword">...</span>
+                              <span class="string">'mdotA'</span>,<span class="string">'Mach'</span>,<span class="string">'mdotf'</span>});
+figure(<span class="string">'Name'</span>,<span class="string">'Correlation'</span>)
+corrplot(variable_table)
+</pre><img vspace="5" hspace="5" src="main_01.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="main_02.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Main Routine
+%
+% This file contains the main routine for the J58 Thermal Model.
+%
+% All other files are required to be in the same directory.
+%% Routine Body
+%
+% Pressures [Pa]
+% Temperatures [ºK]
+% mdot_a.ENGLISH [lb/s]
+% mdot_a.SI [kg/s]
+
+% Generating Condition Vectors
+[altitude, Mach, AB] = condition_vectorizer();
+
+% Inlet Model
+[P_a, P0A, P02, T_a, T02, mdot_a_nonbleed, V_inf] = inlet(altitude, Mach, 0);
+
+% Shock Trap Bleed Model
+[P02, T02, mdot_a] = shock_trap(P02, T02, mdot_a_nonbleed, Mach);
+
+% Compressor Model
+[P03, T03, mdot_a, eta_c] = compressor(P02, T02, mdot_a);
+
+% Burner Model
+[P04, T04, fuel2air, mdot_a, mdot_e1, mdot_f, LHV] = burner(P03, T03, mdot_a);
+
+% Turbine Model
+[P05, T05] = turbine(T02, T03, P04, T04, fuel2air);
+
+% Afterburner Model
+[P06, T06, mdot_e2, mdot_f2, ab_fuel2air] = afterburner(P05, T05, AB, mdot_e1);
+total_fuel2air = struct('ENGLISH', (mdot_f2.ENGLISH+mdot_f.ENGLISH)./mdot_a.ENGLISH,...
+                        'SI', (mdot_f2.SI+mdot_f.SI)./mdot_a.SI);
+%total
+
+% Nozzle Model
+[P8, T8, V8] = nozzle(P06, T06, AB, T02, P_a);
+
+%% Postprocessing
+%
+% Nozzle Area
+rho_nozzle = P8./(287.*T8); % kg/m^3
+total_mdot = struct('ENGLISH', (mdot_a_nonbleed.ENGLISH + mdot_f.ENGLISH + mdot_f2.ENGLISH),...
+                    'SI', (mdot_a_nonbleed.SI + mdot_f.SI + mdot_f2.SI));
+nozzle_area = (mdot_a_nonbleed.SI + mdot_f.SI + mdot_f2.SI)./(rho_nozzle + V8); % m^2
+
+% Thrust
+[thrust_SI] = thrust(mdot_a.SI, total_fuel2air.SI, ...
+                     V8,V_inf, P_a, P8, nozzle_area); % Newtons
+thrust_ENGLISH = 0.224808943.* thrust_SI; % lbf
+
+% Propulsive Efficiency
+[prop_efficiency] = propulsive_efficiency(mdot_a_nonbleed.SI,...
+                                          total_fuel2air.SI,...
+                                          V8, V_inf, thrust_SI);
+
+% Thermal Efficiency
+
+thermal_efficiency = ((thrust_SI.*V_inf) + (0.5.*mdot_a.SI.*(1+total_fuel2air.SI).*((V8-V_inf).^2)))./((LHV.*1000).*(mdot_f2.SI+mdot_f.SI));
+
+% Overall Efficiency
+overall_efficiency = prop_efficiency .* thermal_efficiency;
+
+% TSFC
+TSFC = tsfc(mdot_a.SI, total_fuel2air.SI.*3600, thrust_SI);
+
+% TSFC ENGLISH
+TSFC_ENGLISH = tsfc(mdot_a.ENGLISH, total_fuel2air.ENGLISH.*3600, thrust_ENGLISH);
+
+% Impulse
+Impulse = impulse(mdot_a_nonbleed.SI, total_fuel2air.SI, thrust_SI);
+
+% Specific Thrust
+specific_thrust = (thrust_SI)./(mdot_a_nonbleed.SI);
+
+fprintf('V_inf [mph]\tV_ext[mph]\tMach\tEta_T\tEta_P\tEta_o\tThrust [lbf]\tThrust [kN]\tTSFC [kg/h/N]\n')
+for ii = [1:13]
+    fprintf('%3.2f\t\t%3.2f\t\t%3.2f\t%4.4f\t%4.4f\t%4.4f\t%6.1f\t\t%3.2f\t\t%4.4f\n',V_inf(ii)*2.24, V8(ii)*2.24, Mach(ii), thermal_efficiency(ii), prop_efficiency(ii), overall_efficiency(ii), thrust_ENGLISH(ii), thrust_SI(ii)/1000, TSFC(ii))
+end
+
+%% Viz
+% 
+render = false;
+if render
+    figure('Name','PressureVStation')
+    plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
+    xlabel('Station')
+    ylabel('P [Pa]')
+    legend('Validation','Takeoff (1)', 'Refueling Buddy (2)',...
+           'Climbing (3)', 'Concorde (4)',...
+           'YF12A (5)', 'A12Max (6)', 'Takeoff High (7)', 'LowestM1  (8)',...
+           'MA139XAA (9)', 'FrenchGriffon2  (10)', 'ConstantClimb (11)', 'Out Of Model  (12)')
+    grid on
+    grid minor
+
+    figure('Name','TemperatureVStation')
+    plot([T_a; T_a; T02; T03; T04; T05; T06; T8])
+    xlabel('Station')
+    ylabel('T [ºK]')
+    legend('Validation','Takeoff (1)', 'Refueling Buddy (2)',...
+           'Climbing (3)', 'Concorde (4)',...
+           'YF12A (5)', 'A12Max (6)', 'Takeoff High (7)', 'LowestM1  (8)',...
+           'MA139XAA (9)', 'FrenchGriffon2  (10)', 'ConstantClimb (11)', 'Out Of Model  (12)')
+    grid on
+    grid minor
+
+    figure('Name','ThermalEfficiencyVV_inf')
+    scatter(V_inf', thermal_efficiency')
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_t')
+    grid on
+    grid minor
+
+    figure('Name','ThermalEfficiencyVMach')
+    scatter(Mach', thermal_efficiency')
+    xlabel('Mach')
+    ylabel('\eta_t')
+    grid on
+    grid minor
+
+    figure('Name','PropulsiveEfficiencyVVinf')
+    scatter(V_inf', prop_efficiency')
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_p')
+    grid on
+    grid minor
+
+    figure('Name','PropulsiveEfficiencyVMach')
+    scatter(Mach', prop_efficiency')
+    xlabel('Mach')
+    ylabel('\eta_p')
+    grid on
+    grid minor
+
+    figure('Name','OverallEfficiencyVV_inf')
+    scatter(V_inf', overall_efficiency')
+    xlabel('V_{inf} [m/s]')
+    ylabel('\eta_o')
+    grid on
+    grid minor
+
+    figure('Name','OverallEfficiencyVMach')
+    scatter(Mach', overall_efficiency')
+    xlabel('Mach')
+    ylabel('\eta_o')
+    grid on
+    grid minor
+
+    figure('Name','TSFCVMach')
+    scatter(Mach, TSFC)
+    xlabel('Mach')
+    ylabel('TSFC [(kg/h)/N]')
+    grid on
+    grid minor
+
+    figure('Name','SpecificThrustVMach')
+    scatter(Mach, specific_thrust)
+    xlabel('Mach')
+    ylabel('Specific Thrust [N/(kg/s)]')
+    grid on
+    grid minor
+
+    figure('Name','fVMach')
+    scatter(Mach, total_fuel2air.SI)
+    xlabel('Mach')
+    ylabel('Fuel to Air Ratio')
+    grid on
+    grid minor
+
+    figure('Name','ImpulseVMach')
+    scatter(Mach, Impulse)
+    xlabel('Mach')
+    ylabel('Impulse')
+    grid on
+    grid minor
+end
+
+%% Correlation
+variable_table = array2table([T_a',...
+                              P_a',...
+                              thermal_efficiency',...
+                              prop_efficiency',...
+                              overall_efficiency',...
+                              nozzle_area',...
+                              rho_nozzle',...
+                              thrust_ENGLISH',...
+                              TSFC',...
+                              fuel2air',...
+                              altitude',...
+                              specific_thrust',...
+                              mdot_a_nonbleed.SI',...
+                              Mach',...
+                              mdot_f2.SI'], 'VariableNames',...
+                              {'Ta','Pa','thermalEff','propEff','overallEff',...
+                              'nozzleaArea', 'rhoNozzle', 'thrustEnglish',...
+                              'TSFC', 'fuel2air', 'altitude','specificThrust',...
+                              'mdotA','Mach','mdotf'});
+figure('Name','Correlation')
+corrplot(variable_table)
+                              
+##### SOURCE END #####
+--></body></html>

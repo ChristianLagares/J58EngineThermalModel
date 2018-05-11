@@ -6,12 +6,13 @@ function [P8, T8, V8] = nozzle(P06, T06, AB, T02, P_a)
     % Docstring
     eta_n = 0.98;
     R = 287;
-    T8 = nominalEGT(T02 - 273.15)+273.15;
+    gamma_h = 1.33;
+    Cph = 1.155; 
+    
+    T8 = nominalEGT(T02 - 273.15)+273.15; % T06.*(2./(gamma_h+1));
     Pc = zeros(size(P06));
     P8 = zeros(size(P06));
     V8 = zeros(size(P06));
-    gamma_h = 1.33;
-    Cph = 1.155; 
     
    
     % Inoperant AB
