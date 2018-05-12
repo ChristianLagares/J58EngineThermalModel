@@ -10,7 +10,7 @@ function [thrust] = thrust(air_massflow, air2fuel, exhaust_velocity,...
     % should be floating point vectors with one entry per flight condition.
 
     pthrust = (exhaust_pressure - atmospheric_pressure).*exhaust_area;
-    vthrust = air_massflow.*((1+air2fuel).*exhaust_velocity + flight_velocity);
+    vthrust = air_massflow.*((1+air2fuel).*exhaust_velocity - flight_velocity);
 
     thrust = pthrust + vthrust;
 end

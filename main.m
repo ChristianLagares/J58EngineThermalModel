@@ -35,7 +35,7 @@ total_fuel2air = struct('ENGLISH', (mdot_f2.ENGLISH+mdot_f.ENGLISH)./mdot_a.ENGL
 %total
 
 % Nozzle Model
-[P8, T8, V8] = nozzle(P06, T06, AB, T02, P_a);
+[P8, T8, V8, Pc] = nozzle(P06, T06, AB, T02, P_a);
 
 %% Postprocessing
 %
@@ -81,7 +81,7 @@ end
 
 %% Viz
 % 
-render = true;
+render = false;
 if render == true
     figure('Name','PressureVStation')
     plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
@@ -217,39 +217,29 @@ variable_table = array2table(FULL_MATRIX, 'VariableNames',...
                               {'Ta','Pa','thermalEff','propEff','overallEff',...
                               'thrustEnglish',...
                               'TSFC', 'fuel2air', 'altitude','specificThrust',...
-                              'mdotA','Mach'})
+                              'mdotA','Mach'});
 %% Decision Matrix
-rounds = 2;
-permutations_considered = 12;
+rounds = 4;
+permutations_considered = 10;
 total_variables = 10;
 total_conditions = 13;
 overall_probability = zeros(total_conditions,1);
 for round = [1:rounds]
     decision_weight = zeros(total_variables, permutations_considered);
     for ii = [1:permutations_considered]
-        if permutations_considered > 10
+        if permutations_considered > 6
             if ii == 1
-                random_sample = [10;9;8;7;6;5;4;3;2;1];
+                random_sample = [8;8;9;10;7;6;1;1;1;1];
             elseif ii == 2
-                random_sample = [9;8;7;6;5;4;3;2;1;10];
+                random_sample = [10;10;10;9;5;4;3;2;1;10];
             elseif ii == 3
-                random_sample = [8;7;6;5;4;3;2;1;10;9];
+                random_sample = [7;7;8;8;10;4;1;2;0;0];
             elseif ii == 4
-                random_sample = [7;6;5;4;3;2;1;10;9;8];
+                random_sample = [6;6;10;10;10;1;1;1;1;1];
             elseif ii == 5
-                random_sample = [6;5;4;3;2;1;10;9;8;7];
+                random_sample = [6;6;10;10;10;1;6;1;1;5];
             elseif ii == 6
-                random_sample = [5;4;3;2;1;10;9;8;7;6];
-            elseif ii == 7
-                random_sample = [4;3;2;1;10;9;8;7;6;5];
-            elseif ii == 8
-                random_sample = [3;2;1;10;9;8;7;6;5;4];
-            elseif ii == 9
-                random_sample = [2;1;10;9;8;7;6;5;4;3];
-            elseif ii == 10
-                random_sample = [1;10;9;8;7;6;5;4;3;2];
-            elseif ii > 10
-                random_sample = rand(total_variables,1);
+                random_sample = [10;10;10;10;10;10;0;10;0;0];
             end
         else
             random_sample = rand(total_variables,1);
@@ -265,17 +255,43 @@ for round = [1:rounds]
     probability_array = exp(probability_array)./sum(exp(probability_array));
     overall_probability(:) = overall_probability(:) + probability_array(:);
 end
+overall_probability = log(exp(overall_probability)./rounds);
 overall_probability = exp(overall_probability)./sum(exp(overall_probability));
-figure('NAME','PROBABILITY')
-plot(overall_probability, 'ko')
-ylabel('Probability')
-xlabel('Condition')
-ylim([0,1])
-grid on 
-grid minor
-correlate = false;
-if correlate == true
-    corrplot(variable_table, 'type', 'Pearson', 'testR', 'on')
-    corrplot(variable_table, 'type', 'Kendall', 'testR', 'on')
-    corrplot(variable_table, 'type', 'Spearman', 'testR', 'on')
+if render == true 
+    figure('NAME','PROBABILITY')
+    plot(overall_probability, 'ko')
+    ylabel('Probability')
+    xlabel('Condition')
+    ylim([0,1])
+    grid on 
+    grid minor
+    correlate = false;
+    if correlate == true
+        corrplot(variable_table, 'type', 'Pearson', 'testR', 'on')
+        corrplot(variable_table, 'type', 'Kendall', 'testR', 'on')
+        corrplot(variable_table, 'type', 'Spearman', 'testR', 'on')
+    end
 end
+SUMMARY_MATRIX = [100.*overall_probability,...
+                  T_a',...
+                  P_a',...
+                  thermal_efficiency',...
+                  prop_efficiency',...
+                  overall_efficiency',...
+                  thrust_ENGLISH',...
+                  TSFC_ENGLISH',...
+                  altitude',...
+                  specific_thrust',...
+                  mdot_a_nonbleed.SI',...
+                  Mach',...
+                  Impulse',...
+                  mdot_f2.SI',...
+                  total_fuel2air.SI',...
+                  AB'];
+summary_table = array2table(SUMMARY_MATRIX, 'VariableNames',...
+                              {'Probability','Ta','Pa','thermalEff',...
+                              'propEff','overallEff',...
+                              'thrustEnglish',...
+                              'TSFC', 'altitude','specificThrust',...
+                              'mdotA','Mach', 'Specific_Impulse',...
+                              'mdotF','fuel2air','Afterburner'})
