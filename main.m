@@ -184,8 +184,24 @@ if render == true
     grid on
     grid minor
     
-    figure('Name','EffVThrust')
+    figure('Name','EffTVSThrust')
+    scatter(thrust_ENGLISH, thermal_efficiency)
+    ylim([0,1])
+    xlabel('\tau [lbf]')
+    ylabel('\eta_t')
+    grid on
+    grid minor
+    
+    figure('Name','EffPVSThrust')
+    scatter(thrust_ENGLISH, prop_efficiency)
+    xlabel('\tau [lbf]')
+    ylabel('\eta_p')
+    grid on
+    grid minor
+    
+    figure('Name','EffOVSThrust')
     scatter(thrust_ENGLISH, overall_efficiency)
+    ylim([0,1])
     xlabel('\tau [lbf]')
     ylabel('\eta_o')
     grid on
