@@ -71,6 +71,9 @@ TSFC_ENGLISH = tsfc(mdot_a.ENGLISH, total_fuel2air.ENGLISH.*3600, thrust_ENGLISH
 % Impulse
 Impulse = impulse(mdot_a_nonbleed.SI, total_fuel2air.SI, thrust_SI);
 
+% Range
+Range = range(overall_efficiency, LHV, 6.7);
+
 % Specific Thrust
 specific_thrust = (thrust_SI)./(mdot_a_nonbleed.SI);
 
@@ -81,7 +84,7 @@ end
 
 %% Viz
 % 
-render = false;
+render = true;
 if render == true
     figure('Name','PressureVStation')
     plot([P_a; P0A; P02; P03; P04; P05; P06; P8])
@@ -186,6 +189,20 @@ if render == true
     xlabel('\tau [lbf]')
     ylabel('\eta_o')
     grid on
+    grid minor
+    
+    figure('Name', 'RangeVThrust')
+    scatter(thrust_ENGLISH, Range)
+    xlabel('\tau [lbf]')
+    ylabel('S [km]')
+    grid on 
+    grid minor
+    
+    figure('Name', 'RangeVMach')
+    scatter(Mach, Range)
+    xlabel('Mach')
+    ylabel('S [km]')
+    grid on 
     grid minor
 end
 
